@@ -10,8 +10,10 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 function Header({ type }) {
+  const [destination, setDestination] = useState("");
   const [showDate, setShowDate] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [openOption, setOpenOptions] = useState({
@@ -28,6 +30,8 @@ function Header({ type }) {
     },
   ]);
 
+  const navigate = useNavigate();
+
   const handleOption = (name, action) => {
     setOpenOptions((prev) => ({
       ...prev,
@@ -35,27 +39,31 @@ function Header({ type }) {
     }));
   };
 
+  const handleSearch = () => {
+    navigate("/hotels", { state: { destination, date, openOption } });
+  };
+
   return (
     <div className="header bg-blue-900 flex justify-center text-white relative">
-      <div className="headerContainer w-[100%] max-w-[1024px] mx-5 mt-6 mb-24 lg:my-6">
-        <div className="headerList flex flex-wrap gap-10 justify-center items-center">
-          <div className="headerListItems flex gap-1 items-center justify-center">
+      <div className="headerContainer w-[100%] max-w-[1024px]  mt-6 mb-24 lg:my-6">
+        <div className="headerList flex flex-wrap gap-10 justify-center items-center ">
+          <div className="headerListItems flex gap-1 items-center justify-center cursor-pointer">
             <HotelIcon />
             <span>Stays</span>
           </div>
-          <div className="headerListItems flex gap-1 items-center justify-center">
+          <div className="headerListItems flex gap-1 items-center justify-center cursor-pointer">
             <AirplanemodeActiveIcon />
             <span>Flights</span>
           </div>
-          <div className="headerListItems flex gap-1 items-center justify-center">
+          <div className="headerListItems flex gap-1 items-center justify-center cursor-pointer">
             <CarRentalIcon />
             <span>Car Rental</span>
           </div>
-          <div className="headerListItems flex gap-1 items-center justify-center">
+          <div className="headerListItems flex gap-1 items-center justify-center cursor-pointer">
             <AttractionsIcon />
             <span>Attractions</span>
           </div>
-          <div className="headerListItems flex gap-1 items-center justify-center">
+          <div className="headerListItems flex gap-1 items-center justify-center cursor-pointer">
             <LocalTaxiIcon />
             <span>Airport Taxi</span>
           </div>
@@ -78,7 +86,8 @@ function Header({ type }) {
                 <input
                   type="text"
                   placeholder="Where are you going?"
-                  className="headerSearch outline-none text-black font-medium"
+                  className="headerSearch outline-none text-black font-medium w-[100%]"
+                  onChange={(e) => setDestination(e.target.value)}
                 />
               </div>
 
@@ -100,6 +109,7 @@ function Header({ type }) {
                     moveRangeOnFirstSelection={false}
                     ranges={date}
                     className="absolute top-14 z-10"
+                    minDate={new Date()}
                   />
                 )}
               </div>
@@ -179,7 +189,10 @@ function Header({ type }) {
               </div>
 
               <div className="headerSearchItem flex items-center justify-center gap-2">
-                <button className="bg-blue-900 px-3 py-1 cursor-pointer text-slate-200 font-semibold">
+                <button
+                  className="bg-blue-900 px-3 py-1 cursor-pointer text-slate-200 font-semibold"
+                  onClick={handleSearch}
+                >
                   Search
                 </button>
               </div>
